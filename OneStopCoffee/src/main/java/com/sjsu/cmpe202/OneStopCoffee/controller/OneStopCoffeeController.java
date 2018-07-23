@@ -23,6 +23,7 @@ public class OneStopCoffeeController {
     @Autowired
     CardService cardService;
     PaymentService paymentService;
+    ManageOrderService orderService;
 
 
     @RequestMapping(value = "/cards/", method = RequestMethod.GET)
@@ -43,6 +44,24 @@ public class OneStopCoffeeController {
             return new ResponseEntity<Card>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<Card>(card, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/orders/", method = RequestMethod.GET)
+    public ResponseEntity<List<ManageOrder>> listAllOrders() {
+        List<ManageOrder> orders = orderService.displayOrders();
+        if(orders.isEmpty()){
+            return new ResponseEntity<List<ManageOrder>>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
+        }
+        return new ResponseEntity<List<ManageOrder>>(orders, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getBill", method = RequestMethod.GET)
+    public ResponseEntity<Double> getTotalBill(){
+        Double bill = orderService.calculateTotalBill();
+        if(bill.isEmpty()){
+            return new ResponseEntity<Double>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
+        }
+        return new ResponseEntity<Double>(bill, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/addcard/", method = RequestMethod.POST)
