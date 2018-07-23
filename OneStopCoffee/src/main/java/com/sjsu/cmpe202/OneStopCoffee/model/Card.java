@@ -12,7 +12,7 @@ public class Card {
     private String balance;
     private String username;
 
-    public String getBalance() {
+    public String getBalance(String cardNo) {
         return balance;
     }
 

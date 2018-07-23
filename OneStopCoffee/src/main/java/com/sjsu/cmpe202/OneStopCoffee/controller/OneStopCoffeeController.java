@@ -3,6 +3,9 @@ package com.sjsu.cmpe202.OneStopCoffee.controller;
 import java.util.List;
 import com.sjsu.cmpe202.OneStopCoffee.model.Card;
 import com.sjsu.cmpe202.OneStopCoffee.service.CardService;
+import com.sjsu.cmpe202.OneStopCoffee.service.PaymentService;
+
+import org.assertj.core.internal.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,6 +22,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class OneStopCoffeeController {
     @Autowired
     CardService cardService;
+    PaymentService paymentService;
 
 
     @RequestMapping(value = "/cards/", method = RequestMethod.GET)
@@ -54,5 +58,20 @@ public class OneStopCoffeeController {
 
 
         return new ResponseEntity<Void>(headers, CREATED);
+    }
+    @RequestMapping(value = "/makePayment", method = RequestMethod.POST)
+    public ResponseEntity<Void> postPayment(@RequestBody String cardNum, String cardCVV, String amount,  UriComponentsBuilder ucBuilder) {
+        System.out.println("Creating Payment");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        if(paymentService.makePayment(cardNum, cardCVV, amount)){
+        	
+        	 
+        	 return new ResponseEntity<>(headers, HttpStatus.CREATED);
+
+        }else{
+
+        return new ResponseEntity<Void>(headers,HttpStatus.NOT_FOUND);
+        }
     }
 }
