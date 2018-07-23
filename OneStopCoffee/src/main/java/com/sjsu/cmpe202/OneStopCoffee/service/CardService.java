@@ -15,12 +15,22 @@ public class CardService {
     private CardRepository cardRepository;
     private String id;
 
+    private double money;
+
     public Card addCard(String cardNumber, String cardCvv){
         return cardRepository.save(new Card(cardNumber,cardCvv));
     }
 
     public List<Card> displayALL(){
         return cardRepository.findAll();
+    }
+
+    public Card addMoney(String cardNumber, String amount){
+         Card c= cardRepository.findByCardNumber(cardNumber);
+        double newBal = Double.parseDouble(c.getBalance()) + Double.parseDouble(amount);
+         String newAmount = Double.toString(newBal);
+         c.setBalance(newAmount);
+         return cardRepository.save(c);
     }
 
     public Card findCardByNumber(String cardNumber){

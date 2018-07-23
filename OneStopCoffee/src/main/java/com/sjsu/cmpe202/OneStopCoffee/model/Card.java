@@ -9,20 +9,21 @@ public class Card {
     @Id private String id;
     private String cardNumber;
     private String cardCvv;
-    private double balance;
+    private String balance;
     private String username;
 
-    public double getBalance() {
+    public String getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(String balance) {
         this.balance = balance;
     }
 
     public Card(String cardNumber, String cardCvv) {
         this.cardNumber = cardNumber;
         this.cardCvv = cardCvv;
+        this.balance = "0.00";
     }
 
     public String getId() {

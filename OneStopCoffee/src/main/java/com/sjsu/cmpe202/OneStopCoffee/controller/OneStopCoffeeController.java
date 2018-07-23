@@ -42,7 +42,7 @@ public class OneStopCoffeeController {
     }
 
     @RequestMapping(value = "/addcard/", method = RequestMethod.POST)
-    public ResponseEntity<Void> createUser(@RequestBody String cardNum, String cardCVV,    UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<Void> postCard(@RequestBody String cardNum, String cardCVV,    UriComponentsBuilder ucBuilder) {
         System.out.println("Creating Card");
 
 
