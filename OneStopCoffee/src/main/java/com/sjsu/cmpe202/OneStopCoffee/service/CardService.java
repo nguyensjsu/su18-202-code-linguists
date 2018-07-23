@@ -27,7 +27,7 @@ public class CardService {
 
     public Card addMoney(String cardNumber, String amount){
          Card c= cardRepository.findByCardNumber(cardNumber);
-        double newBal = Double.parseDouble(c.getBalance(cardNumber)) + Double.parseDouble(amount);
+        double newBal = Double.parseDouble(c.getBalance()) + Double.parseDouble(amount);
          String newAmount = Double.toString(newBal);
          c.setBalance(newAmount);
          return cardRepository.save(c);
