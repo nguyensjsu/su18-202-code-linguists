@@ -16,7 +16,7 @@ public class ManageOrdersService {
     private OrderRepository orderRepository;
     private String id;
     private ManageOrder order;
-    private Double bill;
+    private Double bill = 0.00;
 
     public ManageOrder addItems(Map<String, Double> items){ return orderRepository.save( new ManageOrder(items));}
 
@@ -25,7 +25,7 @@ public class ManageOrdersService {
     public ManageOrder findItemByPrice(ManageOrder items){
         return orderRepository.findItemPrice(items);}
 
-    public Double calculateTotalBill() {
+    public Double calculateTotalBill(ManageOrder order){
         for (Map.Entry<String, Double> entry : order.getItems().entrySet()) {
             bill += entry.getValue();
         }
