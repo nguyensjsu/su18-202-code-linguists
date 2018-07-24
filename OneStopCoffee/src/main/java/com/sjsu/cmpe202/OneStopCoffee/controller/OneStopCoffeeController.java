@@ -24,6 +24,7 @@ public class OneStopCoffeeController {
     CardService cardService;
     PaymentService paymentService;
     ManageOrderService orderService;
+    ManageOrder order;
 
 
     @RequestMapping(value = "/cards/", method = RequestMethod.GET)
@@ -57,8 +58,8 @@ public class OneStopCoffeeController {
 
     @RequestMapping(value = "/getBill", method = RequestMethod.GET)
     public ResponseEntity<Double> getTotalBill(){
-        Double bill = orderService.calculateTotalBill();
-        if(bill.isEmpty()){
+        Double bill = orderService.calculateTotalBill(order);
+        if(bill==null){
             return new ResponseEntity<Double>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
         }
         return new ResponseEntity<Double>(bill, HttpStatus.OK);
