@@ -2,6 +2,8 @@ package com.sjsu.cmpe202.OneStopCoffee.model;
 
 import org.springframework.data.annotation.Id;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @JsonDeserialize(as = Payment.class)
 public class Payment {
@@ -11,8 +13,8 @@ private String amount ;
 private String cardNo;
 private String cvv;
 
-
-public Payment( String amount ,String cardNo, String  cvv ) {
+@JsonCreator
+public Payment( @JsonProperty(value = "amount", required = true)String amount ,@JsonProperty(value = "cardNo", required = true)String cardNo, @JsonProperty(value = "cvv", required = true)String  cvv ) {
 	this.cvv =cvv;
     this.amount = amount ;
     this.cardNo = cardNo;
