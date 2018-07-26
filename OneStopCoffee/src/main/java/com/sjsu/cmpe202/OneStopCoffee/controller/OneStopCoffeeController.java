@@ -2,10 +2,10 @@ package com.sjsu.cmpe202.OneStopCoffee.controller;
 
 import java.util.List;
 import com.sjsu.cmpe202.OneStopCoffee.model.Card;
+import com.sjsu.cmpe202.OneStopCoffee.model.ManageOrder;
 import com.sjsu.cmpe202.OneStopCoffee.service.CardService;
 import com.sjsu.cmpe202.OneStopCoffee.service.PaymentService;
-
-import org.assertj.core.internal.Lists;
+import com.sjsu.cmpe202.OneStopCoffee.service.ManageOrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,11 +19,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.MediaType;
 import static org.springframework.http.HttpStatus.CREATED;
 
+@RestController
 public class OneStopCoffeeController {
     @Autowired
     CardService cardService;
     PaymentService paymentService;
-    ManageOrderService orderService;
+    ManageOrdersService orderService;
     ManageOrder order;
 
 
