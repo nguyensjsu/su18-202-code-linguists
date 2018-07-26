@@ -9,6 +9,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource(collectionResourceRel = "orders", path = "orders")
 public interface OrderRepository extends MongoRepository<ManageOrder, String> {
 
-    ManageOrder findItemPrice(@Param("ItemName") ManageOrder items);
+    //ManageOrder findItemPrice(@Param("ItemName") ManageOrder items);
 
 }
