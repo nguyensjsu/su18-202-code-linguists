@@ -4,12 +4,11 @@ package com.sjsu.cmpe202.OneStopCoffee.service;
 import com.sjsu.cmpe202.OneStopCoffee.model.ManageOrder;
 import com.sjsu.cmpe202.OneStopCoffee.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
 
-@Service
+
 public class ManageOrdersService {
 
     @Autowired
@@ -22,8 +21,8 @@ public class ManageOrdersService {
 
     public List<ManageOrder> displayOrders(){ return orderRepository.findAll();}
 
-    public ManageOrder findItemByPrice(ManageOrder items){
-        return orderRepository.findItemPrice(items);}
+//    public ManageOrder findItemByPrice(ManageOrder items){
+//        return orderRepository.findItemPrice(items);}
 
     public Double calculateTotalBill(ManageOrder order){
         for (Map.Entry<String, Double> entry : order.getItems().entrySet()) {
