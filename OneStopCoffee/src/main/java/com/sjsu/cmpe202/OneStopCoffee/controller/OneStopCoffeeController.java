@@ -2,7 +2,10 @@ package com.sjsu.cmpe202.OneStopCoffee.controller;
 
 import java.util.List;
 import com.sjsu.cmpe202.OneStopCoffee.model.Card;
+import com.sjsu.cmpe202.OneStopCoffee.model.ManageOrder;
 import com.sjsu.cmpe202.OneStopCoffee.service.CardService;
+import com.sjsu.cmpe202.OneStopCoffee.service.PaymentService;
+import com.sjsu.cmpe202.OneStopCoffee.service.ManageOrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,9 +19,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.MediaType;
 import static org.springframework.http.HttpStatus.CREATED;
 
+@RestController
 public class OneStopCoffeeController {
     @Autowired
     CardService cardService;
+    PaymentService paymentService;
+    ManageOrdersService orderService;
+    ManageOrder order;
 
 
     @RequestMapping(value = "/cards/", method = RequestMethod.GET)
@@ -41,6 +48,24 @@ public class OneStopCoffeeController {
         return new ResponseEntity<Card>(card, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/orders/", method = RequestMethod.GET)
+    public ResponseEntity<List<ManageOrder>> listAllOrders() {
+        List<ManageOrder> orders = orderService.displayOrders();
+        if(orders.isEmpty()){
+            return new ResponseEntity<List<ManageOrder>>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
+        }
+        return new ResponseEntity<List<ManageOrder>>(orders, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/getBill", method = RequestMethod.GET)
+    public ResponseEntity<Double> getTotalBill(){
+        Double bill = orderService.calculateTotalBill(order);
+        if(bill==null){
+            return new ResponseEntity<Double>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
+        }
+        return new ResponseEntity<Double>(bill, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/addcard/", method = RequestMethod.POST)
     public ResponseEntity<Void> postCard(@RequestBody String cardNum, String cardCVV,    UriComponentsBuilder ucBuilder) {
         System.out.println("Creating Card");
@@ -54,5 +79,20 @@ public class OneStopCoffeeController {
 
 
         return new ResponseEntity<Void>(headers, CREATED);
+    }
+    @RequestMapping(value = "/makePayment", method = RequestMethod.POST)
+    public ResponseEntity<Void> postPayment(@RequestBody String cardNum, String cardCVV, String amount,  UriComponentsBuilder ucBuilder) {
+        System.out.println("Creating Payment");
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        if(paymentService.makePayment(cardNum, cardCVV, amount)){
+        	
+        	 
+        	 return new ResponseEntity<>(headers, HttpStatus.CREATED);
+
+        }else{
+
+        return new ResponseEntity<Void>(headers,HttpStatus.NOT_FOUND);
+        }
     }
 }
