@@ -3,6 +3,8 @@ package com.sjsu.cmpe202.OneStopCoffee.controller;
 import java.util.List;
 import org.json.*;
 import org.json.JSONException;
+import java.util.Map;
+
 import com.sjsu.cmpe202.OneStopCoffee.model.Card;
 import com.sjsu.cmpe202.OneStopCoffee.model.ManageOrder;
 import com.sjsu.cmpe202.OneStopCoffee.service.CardService;
@@ -60,12 +62,25 @@ public class OneStopCoffeeController {
     }
 
     @RequestMapping(value = "/getBill", method = RequestMethod.GET)
-    public ResponseEntity<Double> getTotalBill(){
+    public ResponseEntity<Double> getTotalBill(@RequestBody ManageOrder order){
         Double bill = orderService.calculateTotalBill(order);
         if(bill==null){
-            return new ResponseEntity<Double>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
         }
-        return new ResponseEntity<Double>(bill, HttpStatus.OK);
+        return new ResponseEntity<>(bill, HttpStatus.OK);
+    }
+
+    @RequestMapping (value = "/addOrder", method = RequestMethod.POST)
+    public ResponseEntity<Void> addOrder(@RequestBody Map<String, Double> items, UriComponentsBuilder ucBuilder){
+        System.out.println("Please add items and their price");
+
+        System.out.println(items);
+
+        orderService.addItems(items);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+
     }
 
     @RequestMapping(value = "/addcard/", method = RequestMethod.POST)
