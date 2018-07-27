@@ -52,8 +52,7 @@ public class OneStopCoffeeController {
 
     @RequestMapping(value = "/orders/", method = RequestMethod.GET)
     public ResponseEntity<List<ManageOrder>> listAllOrders() {
-        ManageOrder order = orderService.addItems()
-        List<ManageOrder> orders = orderService.addItems();
+        List<ManageOrder> orders = orderService.displayOrders();
         if(orders.isEmpty()){
             return new ResponseEntity<List<ManageOrder>>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
         }
@@ -70,10 +69,15 @@ public class OneStopCoffeeController {
     }
 
     @RequestMapping (value = "/addOrder", method = RequestMethod.POST)
-    public ResponseEntity<Void> getOrder(@RequestBody Map<String, Double> items, UriComponentsBuilder ucBuilder){
+    public ResponseEntity<Void> addOrder(@RequestBody Map<String, Double> items, UriComponentsBuilder ucBuilder){
         System.out.println("Please add items and their price");
 
+        System.out.println(items);
+
         orderService.addItems(items);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
 
     }
 
