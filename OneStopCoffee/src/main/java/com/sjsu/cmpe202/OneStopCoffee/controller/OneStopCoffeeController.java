@@ -1,11 +1,13 @@
 package com.sjsu.cmpe202.OneStopCoffee.controller;
 
 import java.util.List;
+import java.util.Map;
+
 import com.sjsu.cmpe202.OneStopCoffee.model.Card;
+import com.sjsu.cmpe202.OneStopCoffee.model.ManageOrder;
 import com.sjsu.cmpe202.OneStopCoffee.service.CardService;
 import com.sjsu.cmpe202.OneStopCoffee.service.PaymentService;
-
-import org.assertj.core.internal.Lists;
+import com.sjsu.cmpe202.OneStopCoffee.service.ManageOrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,11 +21,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.http.MediaType;
 import static org.springframework.http.HttpStatus.CREATED;
 
+@RestController
 public class OneStopCoffeeController {
     @Autowired
     CardService cardService;
     PaymentService paymentService;
-    ManageOrderService orderService;
+    ManageOrdersService orderService;
     ManageOrder order;
 
 
@@ -49,7 +52,8 @@ public class OneStopCoffeeController {
 
     @RequestMapping(value = "/orders/", method = RequestMethod.GET)
     public ResponseEntity<List<ManageOrder>> listAllOrders() {
-        List<ManageOrder> orders = orderService.displayOrders();
+        ManageOrder order = orderService.addItems()
+        List<ManageOrder> orders = orderService.addItems();
         if(orders.isEmpty()){
             return new ResponseEntity<List<ManageOrder>>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
         }
@@ -57,12 +61,20 @@ public class OneStopCoffeeController {
     }
 
     @RequestMapping(value = "/getBill", method = RequestMethod.GET)
-    public ResponseEntity<Double> getTotalBill(){
+    public ResponseEntity<Double> getTotalBill(@RequestBody ManageOrder order){
         Double bill = orderService.calculateTotalBill(order);
         if(bill==null){
-            return new ResponseEntity<Double>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
         }
-        return new ResponseEntity<Double>(bill, HttpStatus.OK);
+        return new ResponseEntity<>(bill, HttpStatus.OK);
+    }
+
+    @RequestMapping (value = "/addOrder", method = RequestMethod.POST)
+    public ResponseEntity<Void> getOrder(@RequestBody Map<String, Double> items, UriComponentsBuilder ucBuilder){
+        System.out.println("Please add items and their price");
+
+        orderService.addItems(items);
+
     }
 
     @RequestMapping(value = "/addcard/", method = RequestMethod.POST)

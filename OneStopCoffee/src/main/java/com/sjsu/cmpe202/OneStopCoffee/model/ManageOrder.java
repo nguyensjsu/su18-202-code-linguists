@@ -1,12 +1,12 @@
 package com.sjsu.cmpe202.OneStopCoffee.model;
 
 import org.springframework.data.annotation.Id;
-
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.Map;
 
+@Document
 public class ManageOrder {
-    @Id
-    private String id;
+    @Id private String id;
     private Map<String,Double> items;
     private Double bill;
 
