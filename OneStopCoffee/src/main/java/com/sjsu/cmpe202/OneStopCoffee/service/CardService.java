@@ -18,7 +18,9 @@ public class CardService {
     private double money;
 
     public Card addCard(String cardNumber, String cardCvv){
-        return cardRepository.save(new Card(cardNumber,cardCvv));
+        if(cardNumber.length()==9)
+            return cardRepository.save(new Card(cardNumber,cardCvv));
+        return null;
     }
 
     public List<Card> displayALL(){
