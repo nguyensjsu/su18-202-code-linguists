@@ -1,23 +1,23 @@
 package com.sjsu.cmpe202.OneStopCoffee.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+@Document
 @JsonDeserialize(as = Payment.class)
 public class Payment {
 @Id
 private String id;
 private String amount ;
-private String cardNo;
-private String cvv;
+private String cardID;
 
 @JsonCreator
-public Payment( @JsonProperty(value = "amount", required = true)String amount ,@JsonProperty(value = "cardNo", required = true)String cardNo, @JsonProperty(value = "cvv", required = true)String  cvv ) {
-	this.cvv =cvv;
+public Payment( @JsonProperty(value = "amount", required = true)String amount ,@JsonProperty(value = "cardID", required = true)String cardID) {
+	this.cardID = cardID ;
     this.amount = amount ;
-    this.cardNo = cardNo;
 }
 
 public String getId() {
@@ -36,21 +36,12 @@ public void setAmount(String amount) {
 	this.amount = amount;
 }
 
-public String getCardNo() {
-	return cardNo;
+public String getCardID() {
+	return cardID;
 }
 
-public void setCardNo(String cardNo) {
-	this.cardNo = cardNo;
+public void setCardNo(String cardID) {
+	this.cardID = cardID;
 }
-
-public String getCvv() {
-	return cvv;
-}
-
-public void setCvv(String cvv) {
-	this.cvv = cvv;
-}
-
 
 }

@@ -12,7 +12,7 @@ import com.sjsu.cmpe202.OneStopCoffee.model.Payment;
 @RepositoryRestResource(collectionResourceRel = "payment", path = "payment")
 public interface PaymentRepository extends MongoRepository<Payment, String> {
 
-    List<Payment> findByCardNo(@Param("CardNumber") String cardNumber);
+    List<Payment> findPaymentByCardID(@Param("CardID") String cardID);
 
 
 }

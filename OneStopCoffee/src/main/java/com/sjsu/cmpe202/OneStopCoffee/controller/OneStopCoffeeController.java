@@ -4,6 +4,8 @@ import com.sjsu.cmpe202.OneStopCoffee.model.Card;
 import com.sjsu.cmpe202.OneStopCoffee.service.CardService;
 import com.sjsu.cmpe202.OneStopCoffee.service.ManageOrdersService;
 import com.sjsu.cmpe202.OneStopCoffee.service.PaymentService;
+
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -102,18 +104,20 @@ public class OneStopCoffeeController {
     }
 
     @RequestMapping(value = "/makePayment", method = RequestMethod.POST)
-    public ResponseEntity<Void> postPayment(@RequestBody String cardNum, String cardCVV, String amount,  UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<Void> postPayment(@RequestBody String payRequest) throws JSONException {
         System.out.println("Creating Payment");
+        JSONObject obj = new JSONObject(payRequest);
+        String cardID = obj.getString("cardID");
+        String amt = obj.getString("amount");
+        
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        if(paymentService.makePayment(cardNum, cardCVV, amount)){
-        	
-        	 
+      
+        if(paymentService.makePayment(cardID, amt)){ 	 
         	 return new ResponseEntity<>(headers, HttpStatus.CREATED);
 
         }else{
-
-        return new ResponseEntity<Void>(headers,HttpStatus.NOT_FOUND);
+        	return new ResponseEntity<Void>(headers,HttpStatus.NOT_FOUND);
         }
     }
 }

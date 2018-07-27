@@ -73,8 +73,15 @@ public class CardService {
         System.out.println(newBal);
         return newBal;
     }
-
-
+    public Card getCardID(String cardID){
+        Optional<Card> result = cardRepository.findById(cardID);
+        if(result.isPresent()) {
+            Card c = result.get();
+            return c;
+        }
+        else
+            return null;
+    }
     public Card findCardByNumber(String cardNumber){
         return cardRepository.findByCardNumber(cardNumber);
     }
