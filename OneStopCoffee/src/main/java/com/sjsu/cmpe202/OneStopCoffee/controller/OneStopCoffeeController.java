@@ -15,7 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -24,7 +27,7 @@ public class OneStopCoffeeController {
     @Autowired
     CardService cardService;
 
-    @Autowired
+//    @Autowired
     PaymentService paymentService;
 
     @Autowired
@@ -101,6 +104,25 @@ public class OneStopCoffeeController {
         cardService.addMoney(cardID, amt);
 
         return new ResponseEntity<Void>(headers, CREATED);
+    }
+
+    @RequestMapping (value = "/addOrder", method = RequestMethod.POST)
+    public ResponseEntity<Void> addOrder(@RequestBody HashMap<String, Double> items) throws org.json.JSONException{
+
+        Set<String> keys = items.keySet();
+        Iterator itr = keys.iterator();
+
+        Double total = 0.0;
+
+        while(itr.hasNext()) {
+            String key = (String)itr.next();
+            Double price = (Double) items.get(key);
+            total += price;
+        }
+
+        orderService.addItems(items, total);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+
     }
 
     @RequestMapping(value = "/makePayment", method = RequestMethod.POST)
