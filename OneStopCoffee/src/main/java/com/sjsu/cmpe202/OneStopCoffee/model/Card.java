@@ -20,7 +20,8 @@ public class Card {
         this.balance = balance;
     }
 
-    public Card(String cardNumber, String cardCvv) {
+    public Card(String id, String cardNumber, String cardCvv) {
+        this.id = id;
         this.cardNumber = cardNumber;
         this.cardCvv = cardCvv;
         this.balance = "0.00";

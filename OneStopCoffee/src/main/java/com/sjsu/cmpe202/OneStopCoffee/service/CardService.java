@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CardService {
@@ -18,9 +19,17 @@ public class CardService {
     private double money;
 
     public Card addCard(String cardNumber, String cardCvv){
-        if(cardNumber.length()==9)
-            return cardRepository.save(new Card(cardNumber,cardCvv));
-        return null;
+        if(cardNumber.length()==9 && cardCvv.length()==3) {
+            System.out.println("card service addCard method called--- if");
+            return cardRepository.save(new Card("1", cardNumber, cardCvv));
+        }
+        else {
+            System.out.println("cardNumber-->"+cardNumber);
+            System.out.println("cardCVV-->"+cardCvv);
+            System.out.println("no. of digits in cardNumber-->"+cardNumber.length());
+            System.out.println("card service addCard method called --- else");
+            return null;
+        }
     }
 
     public List<Card> displayALL(){
@@ -34,6 +43,13 @@ public class CardService {
          c.setBalance(newAmount);
          return cardRepository.save(c);
     }
+
+    public Double deductMoney(String cardID){
+       
+
+        return 0.00;
+    }
+
 
     public Card findCardByNumber(String cardNumber){
         return cardRepository.findByCardNumber(cardNumber);

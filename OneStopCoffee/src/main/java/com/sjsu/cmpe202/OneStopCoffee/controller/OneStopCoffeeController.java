@@ -1,6 +1,8 @@
 package com.sjsu.cmpe202.OneStopCoffee.controller;
 
 import java.util.List;
+import org.json.*;
+import org.json.JSONException;
 import com.sjsu.cmpe202.OneStopCoffee.model.Card;
 import com.sjsu.cmpe202.OneStopCoffee.model.ManageOrder;
 import com.sjsu.cmpe202.OneStopCoffee.service.CardService;
@@ -67,15 +69,22 @@ public class OneStopCoffeeController {
     }
 
     @RequestMapping(value = "/addcard/", method = RequestMethod.POST)
-    public ResponseEntity<Void> postCard(@RequestBody String cardNum, String cardCVV,    UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<Void> postCard(@RequestBody String newCard) throws JSONException {
+        JSONObject obj;
+        obj = new JSONObject(newCard);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String cardNum = obj.getString("cardNum");
+        String cardCVV = obj.getString("cardCVV");
         System.out.println("Creating Card");
-
+        System.out.println(cardNum);
+        System.out.println(cardCVV);
 
         cardService.addCard(cardNum,cardCVV);
-        Card c = cardService.findCardByNumber(cardNum);
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setLocation(ucBuilder.path("/cards/{cardNumber}").buildAndExpand(cardService.findCardByNumber(cardNum)).toUri());
+
+
+        //headers.setLocation(ucBuilder.path("/cards/{cardNumber}").buildAndExpand(cardService.findCardByNumber(cardNum)).toUri());
 
 
         return new ResponseEntity<Void>(headers, CREATED);
