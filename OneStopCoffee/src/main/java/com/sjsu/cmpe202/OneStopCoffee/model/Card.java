@@ -1,30 +1,35 @@
 package com.sjsu.cmpe202.OneStopCoffee.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
+@JsonDeserialize(as = Card.class)
 public class Card {
 
     @Id private String id;
     private String cardNumber;
     private String cardCvv;
-    private String balance;
+    private double balance;
     private String username;
 
-    public String getBalance(String cardNo) {
+    public double getBalance() {
         return balance;
     }
 
-    public void setBalance(String balance) {
+    public void setBalance(double balance) {
         this.balance = balance;
     }
 
-    public Card(String id, String cardNumber, String cardCvv) {
+
+    public Card(String id, String cardNumber, String cardCvv, double balance) {
         this.id = id;
         this.cardNumber = cardNumber;
         this.cardCvv = cardCvv;
-        this.balance = "0.00";
+        this.balance = balance;
     }
 
     public String getId() {

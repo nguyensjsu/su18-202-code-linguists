@@ -1,9 +1,10 @@
 package com.sjsu.cmpe202.OneStopCoffee.controller;
 
-import java.util.List;
+import java.util.*;
+
+import com.sjsu.cmpe202.OneStopCoffee.repository.OrderRepository;
 import org.json.*;
 import org.json.JSONException;
-import java.util.Map;
 
 import com.sjsu.cmpe202.OneStopCoffee.model.Card;
 import com.sjsu.cmpe202.OneStopCoffee.model.ManageOrder;
@@ -27,10 +28,12 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class OneStopCoffeeController {
     @Autowired
     CardService cardService;
-    PaymentService paymentService;
-    ManageOrdersService orderService;
-    ManageOrder order;
 
+    @Autowired
+    PaymentService paymentService;
+
+    @Autowired
+    ManageOrdersService orderService;
 
     @RequestMapping(value = "/cards/", method = RequestMethod.GET)
     public ResponseEntity<List<Card>> listAllUsers() {
@@ -52,38 +55,7 @@ public class OneStopCoffeeController {
         return new ResponseEntity<Card>(card, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/orders/", method = RequestMethod.GET)
-    public ResponseEntity<List<ManageOrder>> listAllOrders() {
-        List<ManageOrder> orders = orderService.displayOrders();
-        if(orders.isEmpty()){
-            return new ResponseEntity<List<ManageOrder>>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
-        }
-        return new ResponseEntity<List<ManageOrder>>(orders, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/getBill", method = RequestMethod.GET)
-    public ResponseEntity<Double> getTotalBill(@RequestBody ManageOrder order){
-        Double bill = orderService.calculateTotalBill(order);
-        if(bill==null){
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);//You many decide to return HttpStatus.NOT_FOUND
-        }
-        return new ResponseEntity<>(bill, HttpStatus.OK);
-    }
-
-    @RequestMapping (value = "/addOrder", method = RequestMethod.POST)
-    public ResponseEntity<Void> addOrder(@RequestBody Map<String, Double> items, UriComponentsBuilder ucBuilder){
-        System.out.println("Please add items and their price");
-
-        System.out.println(items);
-
-        orderService.addItems(items);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        return new ResponseEntity<>(headers, HttpStatus.CREATED);
-
-    }
-
-    @RequestMapping(value = "/addcard/", method = RequestMethod.POST)
+    @RequestMapping(value = "/addCard/", method = RequestMethod.POST)
     public ResponseEntity<Void> postCard(@RequestBody String newCard) throws JSONException {
         JSONObject obj;
         obj = new JSONObject(newCard);
@@ -91,19 +63,47 @@ public class OneStopCoffeeController {
         headers.setContentType(MediaType.APPLICATION_JSON);
         String cardNum = obj.getString("cardNum");
         String cardCVV = obj.getString("cardCVV");
-        System.out.println("Creating Card");
-        System.out.println(cardNum);
-        System.out.println(cardCVV);
+        double bal = obj.getDouble("balance");
+        Card card = cardService.addCard(cardNum, cardCVV, bal);
+        if ((card.getId())!=null){
+            System.out.println(" Card Created ");
+            return new ResponseEntity<Void>(headers, CREATED);
+        }
+        else return new ResponseEntity<Void>(headers, HttpStatus.BAD_REQUEST);
+    }
 
-        cardService.addCard(cardNum,cardCVV);
 
 
+    @RequestMapping(value = "/deductMoney/", method = RequestMethod.POST)
+    public ResponseEntity<Void> deductMoney(@RequestBody String inputD) throws JSONException {
+        JSONObject obj;
+        obj = new JSONObject(inputD);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String cardID = obj.getString("cardID");
+        String amt = obj.getString("amt");
+        System.out.println("deducting money");
 
-        //headers.setLocation(ucBuilder.path("/cards/{cardNumber}").buildAndExpand(cardService.findCardByNumber(cardNum)).toUri());
-
+        cardService.deductMoney(cardID, Double.parseDouble(amt));
 
         return new ResponseEntity<Void>(headers, CREATED);
     }
+
+    @RequestMapping(value = "/addMoney/", method = RequestMethod.POST)
+    public ResponseEntity<Void> addMoney(@RequestBody String inputD) throws JSONException {
+        JSONObject obj;
+        obj = new JSONObject(inputD);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String cardID = obj.getString("cardID");
+        String amt = obj.getString("amt");
+        System.out.println("adding money");
+
+        cardService.addMoney(cardID, Double.parseDouble(amt));
+
+        return new ResponseEntity<Void>(headers, CREATED);
+    }
+
     @RequestMapping(value = "/makePayment", method = RequestMethod.POST)
     public ResponseEntity<Void> postPayment(@RequestBody String cardNum, String cardCVV, String amount,  UriComponentsBuilder ucBuilder) {
         System.out.println("Creating Payment");

@@ -1,7 +1,9 @@
 package com.sjsu.cmpe202.OneStopCoffee.service;
 
 import com.sjsu.cmpe202.OneStopCoffee.model.Card;
+import com.sjsu.cmpe202.OneStopCoffee.model.ManageOrder;
 import com.sjsu.cmpe202.OneStopCoffee.repository.CardRepository;
+import com.sjsu.cmpe202.OneStopCoffee.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +18,16 @@ public class CardService {
     private CardRepository cardRepository;
     private String id;
 
+    @Autowired
+    private OrderRepository orderRepository;
+
     private double money;
 
-    public Card addCard(String cardNumber, String cardCvv){
+    public Card addCard(String cardNumber, String cardCvv,double balance){
         if(cardNumber.length()==9 && cardCvv.length()==3) {
             System.out.println("card service addCard method called--- if");
-            return cardRepository.save(new Card("1", cardNumber, cardCvv));
+            String id = java.util.UUID.randomUUID().toString();
+            return cardRepository.save(new Card(id, cardNumber, cardCvv,balance));
         }
         else {
             System.out.println("cardNumber-->"+cardNumber);
@@ -36,22 +42,42 @@ public class CardService {
         return cardRepository.findAll();
     }
 
-    public Card addMoney(String cardNumber, String amount){
-         Card c= cardRepository.findByCardNumber(cardNumber);
-        double newBal = Double.parseDouble(c.getBalance(cardNumber)) + Double.parseDouble(amount);
-         String newAmount = Double.toString(newBal);
-         c.setBalance(newAmount);
-         return cardRepository.save(c);
+    public double addMoney(String cardID, double amount){
+
+        Optional<Card> result = cardRepository.findById(cardID);
+        double newBal = -1;
+
+        if(result.isPresent()) {
+            Card c = result.get();
+            newBal = c.getBalance() + amount;
+            c.setBalance(newBal);
+            System.out.println("added"+c.getBalance());
+            cardRepository.save(c);
+        }
+
+        return newBal;
     }
 
-    public Double deductMoney(String cardID){
-       
+    public double deductMoney(String cardID, double amount){
+        Optional<Card> result = cardRepository.findById(cardID);
 
-        return 0.00;
+        double newBal = -1;
+
+        if(result.isPresent()) {
+            Card c = result.get();
+            newBal = c.getBalance() - amount;
+            c.setBalance(newBal);
+            System.out.println("deducted"+c.getBalance());
+            cardRepository.save(c);
+        }
+        System.out.println(newBal);
+        return newBal;
     }
 
 
     public Card findCardByNumber(String cardNumber){
         return cardRepository.findByCardNumber(cardNumber);
     }
+
+
 }
