@@ -1,5 +1,5 @@
 # Daily stand-up questions
-What tasks did I work on / complete? I worked on integrating payment API with whole application. I also finished UI mockups and created Android application with basic payment screen. I successfully send a REST call via Volley to post payment. However, time did not allow me to complete UI ss learning new technology in my case Volley requires some amount of time to research. 
+What tasks did I work on / complete? I worked on integrating payment API with whole application. I also finished UI mockups and created Android application with basic payment screen. I successfully send a REST call via Volley to post payment. However, time did not allow me to complete UI as learning new technology in my case Volley requires some amount of time to research. 
 
 What am I planning to work on next? Complete UI  as my personal project
 
