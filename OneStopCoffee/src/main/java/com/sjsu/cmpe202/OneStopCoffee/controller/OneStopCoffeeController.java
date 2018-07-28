@@ -27,7 +27,7 @@ public class OneStopCoffeeController {
     @Autowired
     CardService cardService;
 
-//    @Autowired
+    @Autowired
     PaymentService paymentService;
 
     @Autowired
@@ -53,12 +53,15 @@ public class OneStopCoffeeController {
         return new ResponseEntity<Card>(card, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/addCard/", method = RequestMethod.POST)
+    @RequestMapping(value = "/addCard/", method = RequestMethod.POST) // ADD CARD REST API
     public ResponseEntity<Void> postCard(@RequestBody String newCard) throws org.json.JSONException  {
-        JSONObject obj;
-        obj = new JSONObject(newCard);
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+
+        JSONObject obj;
+        obj = new JSONObject(newCard);
+
         String cardNum = obj.getString("cardNum");
         String cardCVV = obj.getString("cardCVV");
         double bal = obj.getDouble("balance");
@@ -71,36 +74,36 @@ public class OneStopCoffeeController {
     }
 
 
-
-    @RequestMapping(value = "/deductMoney/", method = RequestMethod.POST)
+    @RequestMapping(value = "/deductMoney/", method = RequestMethod.POST) // DEDUCT MONEY FROM CARD REST API
     public ResponseEntity<Void> deductMoney(@RequestBody String inputD) throws org.json.JSONException {
         JSONObject obj;
-
-            obj = new JSONObject(inputD);
-
-
+        obj = new JSONObject(inputD);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+
         String cardID = obj.getString("cardID");
         double amt = obj.getDouble("amt");
-        System.out.println("deducting money");
 
+        System.out.println("deducting money");
         cardService.deductMoney(cardID, amt);
 
         return new ResponseEntity<Void>(headers, CREATED);
     }
 
-    @RequestMapping(value = "/addMoney/", method = RequestMethod.POST)
+    @RequestMapping(value = "/addMoney/", method = RequestMethod.POST) // ADD MONEY TO CARD REST API
     public ResponseEntity<Void> addMoney(@RequestBody String inputD) throws org.json.JSONException {
+
         JSONObject obj;
         obj = new JSONObject(inputD);
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+
         String cardID = obj.getString("cardID");
         double amt = obj.getDouble("amt");
-        System.out.println("adding money");
 
+        System.out.println("adding money");
         cardService.addMoney(cardID, amt);
 
         return new ResponseEntity<Void>(headers, CREATED);

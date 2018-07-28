@@ -44,35 +44,22 @@ public class CardService {
 
     public double addMoney(String cardID, double amount){
 
-        Optional<Card> result = cardRepository.findById(cardID);
-        double newBal = -1;
-
-        if(result.isPresent()) {
-            Card c = result.get();
-            newBal = c.getBalance() + amount;
-            c.setBalance(newBal);
-            System.out.println("added"+c.getBalance());
-            cardRepository.save(c);
-        }
-
+        Card c = getCardID(cardID);
+        double newBal = c.getBalance() + amount;
+        c.setBalance(newBal);
+        cardRepository.save(c);
         return newBal;
     }
 
     public double deductMoney(String cardID, double amount){
-        Optional<Card> result = cardRepository.findById(cardID);
 
-        double newBal = -1;
-
-        if(result.isPresent()) {
-            Card c = result.get();
-            newBal = c.getBalance() - amount;
-            c.setBalance(newBal);
-            System.out.println("deducted"+c.getBalance());
-            cardRepository.save(c);
-        }
-        System.out.println(newBal);
+        Card c = getCardID(cardID);
+        double newBal = c.getBalance() - amount;
+        c.setBalance(newBal);
+        cardRepository.save(c);
         return newBal;
     }
+
     public Card getCardID(String cardID){
         Optional<Card> result = cardRepository.findById(cardID);
         if(result.isPresent()) {
