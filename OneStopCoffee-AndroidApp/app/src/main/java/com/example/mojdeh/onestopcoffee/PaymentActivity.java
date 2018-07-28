@@ -39,11 +39,10 @@ public class PaymentActivity extends AppCompatActivity {
     private void volleyCall (){
        final TextView payTxtView = (TextView) findViewById(R.id.textView);
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://10.0.2.2:8080/payment";
+        String url = "http://10.0.2.2:8080/makePayment";
         Map<String , String> jsonObj = new HashMap<>();
-        jsonObj.put( "cardNo" , "123456789");
-        jsonObj.put( "cvv" , "123");
-        jsonObj.put( "amount" , "10");
+        jsonObj.put("cardID", "3");
+        jsonObj.put("amount", "5");
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST , url , new JSONObject(jsonObj),new Response.Listener<JSONObject>() {
 
             @Override
